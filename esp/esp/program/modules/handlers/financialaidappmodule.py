@@ -113,9 +113,9 @@ class FinancialAidAppModule(ProgramModuleObj):
                     fields = '__all__'
 
         if request.method == 'POST':
-            form = Form(request.POST, initial = app.__dict__)
+            form = Form(request.POST, instance=app)
             if form.is_valid():
-                app.__dict__.update(form.cleaned_data)
+                app = form.save(commit=False)
 
                 if not 'submitform' in request.POST or request.POST['submitform'].lower() == 'complete':
                     app.done = True
@@ -174,7 +174,7 @@ This request can be (re)viewed at:
                 return self.goToCore(tl)
 
         else:
-            form = Form(initial = app.__dict__)
+            form = Form(instance=app)
 
         return render_to_response(self.baseDir()+'application.html',
                                   request,
